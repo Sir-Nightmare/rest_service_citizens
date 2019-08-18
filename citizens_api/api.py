@@ -1,8 +1,8 @@
 import logging
 import sys
 
-from flask import Flask
 from flasgger import Swagger
+from flask import Flask
 from flask_restful import Api, Resource
 
 from citizens_api.arg_parser import ArgParser, DEFAULT_HOST
@@ -114,9 +114,73 @@ class GetCitizens(Resource):
         return {'data': [import_id]}, 200
 
 
+class GetBirthdays(Resource):
+    def get(self, import_id):
+        """
+        Get citizens and number of presents they will buy.
+        ---
+        tags:
+           - Additional requests
+        parameters:
+          - in: path
+            name: import_id
+            type: integer
+            required: true
+            description: ID of the import
+        responses:
+          200:
+            description: OK
+          400:
+            description: Bad request
+          404:
+            description: Nothing was not found for specified import_id
+          500:
+            description: Internal server error
+         """
+        try:
+            import_id = int(import_id)
+        except ValueError:
+            return {"message": "Invalid import ID"}, 400
+
+        return {'data': [import_id]}, 200
+
+
+class GetAgeStatistics(Resource):
+    def get(self, import_id):
+        """
+        Get age statistics for each town in import
+        ---
+        tags:
+           - Additional requests
+        parameters:
+          - in: path
+            name: import_id
+            type: integer
+            required: true
+            description: ID of the import
+        responses:
+          200:
+            description: OK
+          400:
+            description: Bad request
+          404:
+            description: Nothing was not found for specified import_id
+          500:
+            description: Internal server error
+         """
+        try:
+            import_id = int(import_id)
+        except ValueError:
+            return {"message": "Invalid import ID"}, 400
+
+        return {'data': [import_id]}, 200
+
+
 api.add_resource(UploadCitizens, '/imports')
 api.add_resource(UpdateCitizen, '/imports/<import_id>/citizens/<citizen_id>')
 api.add_resource(GetCitizens, '/imports/<import_id>/citizens')
+api.add_resource(GetBirthdays, '/imports/<import_id>/citizens/birthdays')
+api.add_resource(GetAgeStatistics, '/imports/<import_id>/towns/stat/percentile/age')
 
 
 def run_api():
