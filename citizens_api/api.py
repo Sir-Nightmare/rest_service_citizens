@@ -28,7 +28,7 @@ class UploadCitizens(Resource):
          tags:
            - Base requests
          parameters:
-              - name: payload
+              - name: citizens_import
                 in: body
                 required: true
          responses:
@@ -55,7 +55,6 @@ class UpdateCitizen(Resource):
             type: integer
             required: true
             description: ID of the import
-        parameters:
           - in: path
             name: citizen_id
             type: integer
@@ -78,7 +77,7 @@ class UpdateCitizen(Resource):
         try:
             citizen_id = int(citizen_id)
         except ValueError:
-            return {"message": "Invalid import ID"}, 400
+            return {"message": "Invalid citizen ID"}, 400
 
         return {'data': {"citizen_id": citizen_id, "import_id": import_id}}, 200
 
