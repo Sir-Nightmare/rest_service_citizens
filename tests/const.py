@@ -58,3 +58,24 @@ PATCH_DICT = {
     "gender": "male",
     "relatives": [1]
 }
+PROPERTIES_DICT = {"citizen_id": {"type": "integer"},
+                   "town": {"type": "string"},
+                   "street": {"type": "string"},
+                   "building": {"type": "string"},
+                   "apartment": {"type": "integer"},
+                   "name": {"type": "string"},
+                   "birth_date": {"type": "string", "pattern": r"^([0123][0-9]).([012][0-9]).(\d{4})$"},
+                   "gender": {"type": "string", "enum": ["male", "female"]},
+                   "relatives": {"type": "array", "uniqueItems": True, "items": {"type": "integer"}}}
+
+SCHEMA_DICT = {
+    "type": "object",
+    "properties": {
+        "citizens": {"type": "array", "minItems": 1, "items": {"type": "object", "properties": PROPERTIES_DICT}},
+    }
+}
+
+import fastjsonschema
+
+validate = fastjsonschema.compile(SCHEMA_DICT)
+print(validate(BASE_IMPORT))
