@@ -1,8 +1,7 @@
 import argparse
 from collections import namedtuple
 
-DEFAULT_HOST = "0.0.0.0"
-DEFAULT_PORT = 8080
+from citizens_api.const import DEFAULT_HOST, DEFAULT_PORT
 
 
 class ArgParser:

@@ -2,10 +2,12 @@ import logging
 import sys
 
 from flasgger import Swagger
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api, Resource
 
-from citizens_api.arg_parser import ArgParser, DEFAULT_HOST
+from citizens_api.arg_parser import ArgParser
+from citizens_api.const import DEFAULT_HOST
+from citizens_api.validator import validate_import, validate_patch
 
 _APP_TITLE = "CitizensAPI"
 _APP_VERSION = "0.1.0"
@@ -39,6 +41,10 @@ class UploadCitizens(Resource):
               500:
                 description: Internal server error
          """
+        try:
+            validate_import(request.json)
+        except AssertionError as err:
+            return {"message": str(err)}, 400
         return {"data": {"import_id": 1}}, 201
 
 
@@ -78,8 +84,12 @@ class UpdateCitizen(Resource):
             citizen_id = int(citizen_id)
         except ValueError:
             return {"message": "Invalid citizen ID"}, 400
+        try:
+            validate_patch(request.json)
+        except AssertionError as err:
+            return {"message": str(err)}, 400
 
-        return {'data': {"citizen_id": citizen_id, "import_id": import_id}}, 200
+        return {'data': {'id': citizen_id, "import_id": import_id}}, 200
 
 
 class GetCitizens(Resource):
